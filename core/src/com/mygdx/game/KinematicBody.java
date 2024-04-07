@@ -1,24 +1,27 @@
 package com.mygdx.game;
 
+import static com.mygdx.game.SunBox2D.WORLD_WIDTH;
+
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class StaticBody {
+public class KinematicBody {
     private float x, y;
     private float width, height;
+    private float vx = 2, vy = 0;
     private Body body;
 
-    StaticBody(World world, float x, float y, float width, float height){
+    KinematicBody(World world, float x, float y, float width, float height){
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
 
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.type = BodyDef.BodyType.KinematicBody;
         bodyDef.position.set(x, y);
 
         body = world.createBody(bodyDef);
@@ -27,8 +30,9 @@ public class StaticBody {
         shape.setAsBox(width/2, height/2);
 
         body.createFixture(shape, 0);
-
         shape.dispose();
+
+        body.setLinearVelocity(vx, vy);
     }
 
     public float getX() {
@@ -45,5 +49,17 @@ public class StaticBody {
 
     public float getHeight() {
         return height;
+    }
+
+    public  float getAngle() {
+        return body.getAngle() * MathUtils.radiansToDegrees;
+    }
+
+    public void move() {
+        x = body.getPosition().x;
+        if(x > WORLD_WIDTH | x <0) {
+            vx = -vx;
+            body.setLinearVelocity(vx, vy);
+        }
     }
 }
