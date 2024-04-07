@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class SunBox2D extends ApplicationAdapter {
 	// глобальные константы
 	public static final float WORLD_WIDTH = 16, WORLD_HEIGHT = 9;
+	public static final int TYPE_SMILE = 0, TYPE_BRICK = 1;
 
 	// системные объекты
 	SpriteBatch batch;
@@ -24,13 +25,16 @@ public class SunBox2D extends ApplicationAdapter {
 	// ресурсы
 	Texture imgBeton;
 	Texture imgSmileTexture;
+	Texture imgBrickTexture;
 	TextureRegion imgSmile;
+	TextureRegion imgBrick;
+	TextureRegion img;
 
 	// наши объекты и переменные
 	StaticBody floor;
 	StaticBody wallLeft, wallRight;
 
-	DynamicBody[] balls = new DynamicBody[25];
+	DynamicBody[] balls = new DynamicBody[50];
 	
 	@Override
 	public void create () {
@@ -42,13 +46,19 @@ public class SunBox2D extends ApplicationAdapter {
 
 		imgBeton = new Texture("beton.png");
 		imgSmileTexture = new Texture("smile.png");
+		imgBrickTexture = new Texture("brick.png");
 		imgSmile = new TextureRegion(imgSmileTexture, 0, 0, 128, 128);
+		imgBrick = new TextureRegion(imgBrickTexture, 0, 0, 100, 100);
 
 		floor = new StaticBody(world, 8, 0.5f, 16, 1);
 		wallLeft = new StaticBody(world, 0.5f, 5, 1, 8);
 		wallRight = new StaticBody(world, 15.5f, 5, 1, 8);
 		for (int i = 0; i < balls.length; i++) {
-			balls[i] = new DynamicBody(world, WORLD_WIDTH/2+MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT+i, 0.4f);
+			if(i%2 == 0) {
+				balls[i] = new DynamicBody(world, WORLD_WIDTH / 2 + MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT + i, 0.4f);
+			} else {
+				balls[i] = new DynamicBody(world, WORLD_WIDTH / 2 + MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT + i, 1, 0.5f);
+			}
 		}
 	}
 
@@ -60,8 +70,9 @@ public class SunBox2D extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		for (DynamicBody b: balls) {
-			batch.draw(imgSmile, b.getX(), b.getY(), b.getWidth()/2, b.getHeight()/2,
-					b.getWidth(), b.getHeight(), 1, 1, b.getAngle());
+			if(b.type == TYPE_SMILE) img = imgSmile;
+			else img = imgBrick;
+			batch.draw(img, b.getX(), b.getY(), b.getWidth()/2, b.getHeight()/2, b.getWidth(), b.getHeight(), 1, 1, b.getAngle());
 		}
 		batch.draw(imgBeton, floor.getX(), floor.getY(), floor.getWidth(), floor.getHeight());
 		batch.draw(imgBeton, wallLeft.getX(), wallLeft.getY(), wallLeft.getWidth(), wallLeft.getHeight());
@@ -74,6 +85,7 @@ public class SunBox2D extends ApplicationAdapter {
 		batch.dispose();
 		imgBeton.dispose();
 		imgSmileTexture.dispose();
+		imgBrickTexture.dispose();
 		world.dispose();
 		debugRenderer.dispose();
 	}
