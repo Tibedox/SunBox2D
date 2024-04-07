@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -16,7 +17,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class SunBox2D extends ApplicationAdapter {
 	// глобальные константы
 	public static final float WORLD_WIDTH = 16, WORLD_HEIGHT = 9;
-	public static final int TYPE_SMILE = 0, TYPE_BRICK = 1;
+	public static final int TYPE_SMILE = 0, TYPE_BRICK = 1, TYPE_POLY = 2;
 
 	// системные объекты
 	SpriteBatch batch;
@@ -42,7 +43,7 @@ public class SunBox2D extends ApplicationAdapter {
 
 	KinematicBody platform;
 
-	DynamicBody[] balls = new DynamicBody[50];
+	DynamicBody[] balls = new DynamicBody[33];
 	
 	@Override
 	public void create () {
@@ -71,9 +72,12 @@ public class SunBox2D extends ApplicationAdapter {
 		for (int i = 0; i < balls.length; i++) {
 			if(i%2 == 0) {
 				balls[i] = new DynamicBody(world, WORLD_WIDTH / 2 + MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT + i, 0.4f);
-			} else {
+			} if(i%2 == 1) {
 				balls[i] = new DynamicBody(world, WORLD_WIDTH / 2 + MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT + i, 1, 0.5f);
-			}
+			} /*if(i%2 == 1) {
+				Polygon polygon = new Polygon(new float[]{-1, -1, 0, 1, 1, -1, -1, -1});
+				balls[0] = new DynamicBody(world, 8 + MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT + i, polygon);
+			}*/
 		}
 	}
 
@@ -85,7 +89,7 @@ public class SunBox2D extends ApplicationAdapter {
 			camera.unproject(touch);
 			for (DynamicBody b: balls){
 				if(b.hit(touch.x, touch.y)){
-					b.setImpulse();
+					b.setImpulse(new Vector2(5, 0));
 				}
 			}
 		}
@@ -108,7 +112,7 @@ public class SunBox2D extends ApplicationAdapter {
 			if(b.type == TYPE_SMILE) img = imgSmile;
 			else img = imgBrick;
 			batch.draw(img, b.getX(), b.getY(), b.getWidth()/2, b.getHeight()/2, b.getWidth(), b.getHeight(), 1, 1, b.getAngle());
-		} */
+		}*/
 		batch.end();
 	}
 	
