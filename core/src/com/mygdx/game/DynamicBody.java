@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class DynamicBody {
     private float x, y;
     private float r;
-    Body body;
+    private Body body;
 
     DynamicBody(World world, float x, float y, float r){
         this.x = x;
@@ -29,9 +29,9 @@ public class DynamicBody {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 0.2f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.8f;
+        fixtureDef.density = 0.2f; // плотность
+        fixtureDef.friction = 0.4f; // трение
+        fixtureDef.restitution = 0.8f; // упругость
 
         Fixture fixture = body.createFixture(fixtureDef);
 
