@@ -66,7 +66,7 @@ public class DynamicBody {
         fixtureDef.shape = shape;
         fixtureDef.density = 0.2f; // плотность
         fixtureDef.friction = 0.4f; // трение
-        fixtureDef.restitution = 0.8f; // упругость
+        fixtureDef.restitution = 0.9f; // упругость
 
         Fixture fixture = body.createFixture(fixtureDef);
 

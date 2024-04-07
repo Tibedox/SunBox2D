@@ -11,8 +11,9 @@ import com.badlogic.gdx.physics.box2d.World;
 public class KinematicBody {
     private float x, y;
     private float width, height;
-    private float vx = 2, vy = 0;
     private Body body;
+    private float vx = 2, vy = 0;
+    private float va = 7;
 
     KinematicBody(World world, float x, float y, float width, float height){
         this.x = x;
@@ -33,6 +34,7 @@ public class KinematicBody {
         shape.dispose();
 
         body.setLinearVelocity(vx, vy);
+        body.setAngularVelocity(va);
     }
 
     public float getX() {
@@ -59,7 +61,9 @@ public class KinematicBody {
         x = body.getPosition().x;
         if(x > WORLD_WIDTH | x <0) {
             vx = -vx;
+            va = -va;
             body.setLinearVelocity(vx, vy);
+            body.setAngularVelocity(va);
         }
     }
 }

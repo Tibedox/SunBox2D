@@ -62,7 +62,7 @@ public class SunBox2D extends ApplicationAdapter {
 		wallLeft = new StaticBody(world, 0.5f, 5, 1, 8);
 		wallRight = new StaticBody(world, 15.5f, 5, 1, 8);
 
-		platform = new KinematicBody(world, 0, 2, 3, 1);
+		platform = new KinematicBody(world, 0, 3, 3, 1);
 
 		for (int i = 0; i < balls.length; i++) {
 			if(i%2 == 0) {
