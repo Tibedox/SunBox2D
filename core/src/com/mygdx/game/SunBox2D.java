@@ -1,12 +1,14 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -19,6 +21,7 @@ public class SunBox2D extends ApplicationAdapter {
 	// системные объекты
 	SpriteBatch batch;
 	OrthographicCamera camera;
+	Vector3 touch;
 	World world;
 	Box2DDebugRenderer debugRenderer;
 
@@ -46,6 +49,7 @@ public class SunBox2D extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
+		touch = new Vector3();
 		world = new World(new Vector2(0, -9.8f), true);
 		debugRenderer = new Box2DDebugRenderer();
 
@@ -75,6 +79,17 @@ public class SunBox2D extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		// касания
+		if(Gdx.input.justTouched()){
+			touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			camera.unproject(touch);
+			for (DynamicBody b: balls){
+				if(b.hit(touch.x, touch.y)){
+					b.setImpulse();
+				}
+			}
+		}
+
 		// события
 		platform.move();
 
@@ -84,7 +99,7 @@ public class SunBox2D extends ApplicationAdapter {
 		debugRenderer.render(world, camera.combined);
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		batch.draw(imgBeton, floor.getX(), floor.getY(), floor.getWidth(), floor.getHeight());
+	/*	batch.draw(imgBeton, floor.getX(), floor.getY(), floor.getWidth(), floor.getHeight());
 		batch.draw(imgGrass, wallLeft.getX(), wallLeft.getY(), wallLeft.getWidth(), wallLeft.getHeight());
 		batch.draw(imgGrass, wallRight.getX(), wallRight.getY(), wallRight.getWidth(), wallRight.getHeight());
 		batch.draw(imgBeton, platform.getX(), platform.getY(), platform.getWidth()/2, platform.getHeight()/2,
@@ -93,7 +108,7 @@ public class SunBox2D extends ApplicationAdapter {
 			if(b.type == TYPE_SMILE) img = imgSmile;
 			else img = imgBrick;
 			batch.draw(img, b.getX(), b.getY(), b.getWidth()/2, b.getHeight()/2, b.getWidth(), b.getHeight(), 1, 1, b.getAngle());
-		}
+		} */
 		batch.end();
 	}
 	

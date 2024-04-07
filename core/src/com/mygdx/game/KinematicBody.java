@@ -12,8 +12,8 @@ public class KinematicBody {
     private float x, y;
     private float width, height;
     private Body body;
-    private float vx = 2, vy = 0;
-    private float va = 7;
+    private float vx = 0, vy = 0;
+    private float va = 0;
 
     KinematicBody(World world, float x, float y, float width, float height){
         this.x = x;

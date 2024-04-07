@@ -4,6 +4,7 @@ import static com.mygdx.game.SunBox2D.TYPE_BRICK;
 import static com.mygdx.game.SunBox2D.TYPE_SMILE;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -17,6 +18,7 @@ public class DynamicBody {
     private float r;
     private float width, height;
     private Body body;
+    private Fixture fixture;
     public int type;
 
     DynamicBody(World world, float x, float y, float r){
@@ -41,7 +43,7 @@ public class DynamicBody {
         fixtureDef.friction = 0.4f; // трение
         fixtureDef.restitution = 0.8f; // упругость
 
-        Fixture fixture = body.createFixture(fixtureDef);
+        fixture = body.createFixture(fixtureDef);
 
         shape.dispose();
     }
@@ -68,7 +70,7 @@ public class DynamicBody {
         fixtureDef.friction = 0.4f; // трение
         fixtureDef.restitution = 0.9f; // упругость
 
-        Fixture fixture = body.createFixture(fixtureDef);
+        fixture = body.createFixture(fixtureDef);
 
         shape.dispose();
     }
@@ -89,7 +91,15 @@ public class DynamicBody {
         return height;
     }
 
-    public  float getAngle() {
+    public float getAngle() {
         return body.getAngle() * MathUtils.radiansToDegrees;
+    }
+
+    public boolean hit(float tx, float ty) {
+        return fixture.testPoint(tx, ty);
+    }
+
+    public void setImpulse(){
+        body.applyLinearImpulse(new Vector2(0, 2), body.getPosition(), true);
     }
 }
