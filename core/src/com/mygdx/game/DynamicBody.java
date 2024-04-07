@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -52,5 +53,9 @@ public class DynamicBody {
 
     public float getHeight() {
         return r*2;
+    }
+
+    public  float getAngle() {
+        return body.getAngle() * MathUtils.radiansToDegrees;
     }
 }

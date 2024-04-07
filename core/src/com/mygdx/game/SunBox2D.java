@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -22,6 +23,8 @@ public class SunBox2D extends ApplicationAdapter {
 
 	// ресурсы
 	Texture imgBeton;
+	Texture imgSmileTexture;
+	TextureRegion imgSmile;
 
 	// наши объекты и переменные
 	StaticBody floor;
@@ -38,6 +41,8 @@ public class SunBox2D extends ApplicationAdapter {
 		debugRenderer = new Box2DDebugRenderer();
 
 		imgBeton = new Texture("beton.png");
+		imgSmileTexture = new Texture("smile.png");
+		imgSmile = new TextureRegion(imgSmileTexture, 0, 0, 128, 128);
 
 		floor = new StaticBody(world, 8, 0.5f, 16, 1);
 		wallLeft = new StaticBody(world, 0.5f, 5, 1, 8);
@@ -54,9 +59,10 @@ public class SunBox2D extends ApplicationAdapter {
 		debugRenderer.render(world, camera.combined);
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		/*for (int i = 0; i < balls.length; i++) {
-			batch.draw(img, balls[i].getX(), balls[i].getY(), balls[i].getWidth(), balls[i].getHeight());
-		}*/
+		for (DynamicBody b: balls) {
+			batch.draw(imgSmile, b.getX(), b.getY(), b.getWidth()/2, b.getHeight()/2,
+					b.getWidth(), b.getHeight(), 1, 1, b.getAngle());
+		}
 		batch.draw(imgBeton, floor.getX(), floor.getY(), floor.getWidth(), floor.getHeight());
 		batch.draw(imgBeton, wallLeft.getX(), wallLeft.getY(), wallLeft.getWidth(), wallLeft.getHeight());
 		batch.draw(imgBeton, wallRight.getX(), wallRight.getY(), wallRight.getWidth(), wallRight.getHeight());
@@ -67,6 +73,7 @@ public class SunBox2D extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 		imgBeton.dispose();
+		imgSmileTexture.dispose();
 		world.dispose();
 		debugRenderer.dispose();
 	}
