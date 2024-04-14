@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -52,7 +53,7 @@ public class SunBox2D extends ApplicationAdapter {
 		touch = new Vector3();
 		world = new World(new Vector2(0, -9.8f), true);
 		debugRenderer = new Box2DDebugRenderer();
-		//debugRenderer.setDrawVelocities(true);
+		debugRenderer.setDrawVelocities(true);
 
 		imgTextureAtlas = new Texture("atlasloot.png");
 		imgCircle = new TextureRegion(imgTextureAtlas, 3*256, 0, 256, 256);
@@ -84,10 +85,14 @@ public class SunBox2D extends ApplicationAdapter {
 				balls.add(new DynamicBody(world, 8 + MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT + i, polygon0, polygon1));
 			}
 		}
+
+		// касания
+		createInputProcessor();
 	}
 
 	@Override
 	public void render () {
+		/*
 		// касания
 		if(Gdx.input.justTouched()){
 			touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -97,7 +102,7 @@ public class SunBox2D extends ApplicationAdapter {
 					b.setImpulse(new Vector2(0, 2));
 				}
 			}
-		}
+		}*/
 
 		// события
 		platform.move();
@@ -108,7 +113,7 @@ public class SunBox2D extends ApplicationAdapter {
 		debugRenderer.render(world, camera.combined);
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-/*		batch.draw(imgBeton, floor.getX(), floor.getY(), floor.getWidth(), floor.getHeight());
+		/*batch.draw(imgBeton, floor.getX(), floor.getY(), floor.getWidth(), floor.getHeight());
 		batch.draw(imgBeton, wallLeft.getX(), wallLeft.getY(), wallLeft.getWidth(), wallLeft.getHeight());
 		batch.draw(imgBeton, wallRight.getX(), wallRight.getY(), wallRight.getWidth(), wallRight.getHeight());
 		batch.draw(imgLightBeton, platform.getX(), platform.getY(), platform.getWidth()/2, platform.getHeight()/2,
@@ -134,5 +139,72 @@ public class SunBox2D extends ApplicationAdapter {
 		for (int i = 0; i < p.getVertices().length; i++) {
 			p.getVertices()[i] *= s;
 		}
+	}
+
+	private void createInputProcessor() {
+		Gdx.input.setInputProcessor(new InputProcessor() {
+			final Vector2 firstTouch = new Vector2();
+			DynamicBody bodyTouched;
+
+			@Override
+			public boolean keyDown(int keycode) {
+				return false;
+			}
+
+			@Override
+			public boolean keyUp(int keycode) {
+				return false;
+			}
+
+			@Override
+			public boolean keyTyped(char character) {
+				return false;
+			}
+
+			@Override
+			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+				touch.set(screenX, screenY, 0);
+				camera.unproject(touch);
+				for (DynamicBody b: balls){
+					if(b.hit(touch.x, touch.y)){
+						bodyTouched = b;
+						firstTouch.set(touch.x, touch.y);
+					}
+				}
+				return false;
+			}
+
+			@Override
+			public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+				if(bodyTouched != null) {
+					touch.set(screenX, screenY, 0);
+					camera.unproject(touch);
+					Vector2 impulse = new Vector2(touch.x - firstTouch.x, touch.y - firstTouch.y);
+					bodyTouched.setImpulse(impulse);
+					bodyTouched = null;
+				}
+				return false;
+			}
+
+			@Override
+			public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+				return false;
+			}
+
+			@Override
+			public boolean touchDragged(int screenX, int screenY, int pointer) {
+				return false;
+			}
+
+			@Override
+			public boolean mouseMoved(int screenX, int screenY) {
+				return false;
+			}
+
+			@Override
+			public boolean scrolled(float amountX, float amountY) {
+				return false;
+			}
+		});
 	}
 }
