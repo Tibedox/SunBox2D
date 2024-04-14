@@ -103,6 +103,40 @@ public class DynamicBody {
         shape.dispose();
     }
 
+    DynamicBody(World world, float x, float y, Polygon p0, Polygon p1){
+        type = TYPE_POLY;
+        this.x = x;
+        this.y = y;
+        this.width = p0.getBoundingRectangle().getWidth();
+        this.height = p0.getBoundingRectangle().getHeight()*2;
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(x, y);
+
+        body = world.createBody(bodyDef);
+
+        PolygonShape shape0 = new PolygonShape();
+        shape0.set(p0.getVertices());
+        FixtureDef fixtureDef0 = new FixtureDef();
+        fixtureDef0.shape = shape0;
+        fixtureDef0.density = 0.5f; // плотность
+        fixtureDef0.friction = 0.4f; // трение
+        fixtureDef0.restitution = 0.5f; // упругость
+        body.createFixture(fixtureDef0);
+        shape0.dispose();
+
+        PolygonShape shape1 = new PolygonShape();
+        shape1.set(p1.getVertices());
+        FixtureDef fixtureDef1 = new FixtureDef();
+        fixtureDef1.shape = shape1;
+        fixtureDef1.density = 0.5f; // плотность
+        fixtureDef1.friction = 0.4f; // трение
+        fixtureDef1.restitution = 0.5f; // упругость
+        body.createFixture(fixtureDef1);
+        shape1.dispose();
+    }
+
     public float getX() {
         return body.getPosition().x-width/2;
     }
@@ -124,7 +158,10 @@ public class DynamicBody {
     }
 
     public boolean hit(float tx, float ty) {
-        return body.getFixtureList().get(0).testPoint(tx, ty);
+        for(Fixture f: body.getFixtureList()) {
+            if(f.testPoint(tx, ty)) return true;
+        }
+        return false;
     }
 
     public void setImpulse(Vector2 p){

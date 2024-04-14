@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class SunBox2D extends ApplicationAdapter {
@@ -41,7 +42,7 @@ public class SunBox2D extends ApplicationAdapter {
 
 	KinematicBody platform;
 
-	DynamicBody[] balls = new DynamicBody[10];
+	Array<DynamicBody> balls = new Array<>();
 	
 	@Override
 	public void create () {
@@ -66,15 +67,21 @@ public class SunBox2D extends ApplicationAdapter {
 
 		platform = new KinematicBody(world, 0, 3, 3, 1);
 
-		for (int i = 0; i < balls.length; i++) {
-			if(i%3 == 0) {
-				balls[i] = new DynamicBody(world, 8 + MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT + i, 0.4f);
-			} if(i%3 == 1) {
-				balls[i] = new DynamicBody(world, 8 + MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT + i, 1, 0.5f);
-			} if(i%3 == 2) {
+		for (int i = 0; i < 20; i++) {
+			if(i<2) {
+				balls.add(new DynamicBody(world, 8 + MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT + i, 0.4f));
+			} else if(i<4) {
+				balls.add(new DynamicBody(world, 8 + MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT + i, 1, 0.5f));
+			} else if(i<8) {
 				Polygon polygon = new Polygon(new float[]{-1, -1, 1, -1, 0, 1});
 				scalePolygon(polygon, 0.5f);
-				balls[i] = new DynamicBody(world, 8 + MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT + i, polygon);
+				balls.add(new DynamicBody(world, 8 + MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT + i, polygon));
+			} else {
+				Polygon polygon0 = new Polygon(new float[]{-1, 0, 0, 1, 1, 0});
+				Polygon polygon1 = new Polygon(new float[]{-1, -1, -0.5f, 0, 0.5f, 0, 1, -1});
+				scalePolygon(polygon0, 0.5f);
+				scalePolygon(polygon1, 0.5f);
+				balls.add(new DynamicBody(world, 8 + MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT + i, polygon0, polygon1));
 			}
 		}
 	}
@@ -101,7 +108,7 @@ public class SunBox2D extends ApplicationAdapter {
 		debugRenderer.render(world, camera.combined);
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		batch.draw(imgBeton, floor.getX(), floor.getY(), floor.getWidth(), floor.getHeight());
+/*		batch.draw(imgBeton, floor.getX(), floor.getY(), floor.getWidth(), floor.getHeight());
 		batch.draw(imgBeton, wallLeft.getX(), wallLeft.getY(), wallLeft.getWidth(), wallLeft.getHeight());
 		batch.draw(imgBeton, wallRight.getX(), wallRight.getY(), wallRight.getWidth(), wallRight.getHeight());
 		batch.draw(imgLightBeton, platform.getX(), platform.getY(), platform.getWidth()/2, platform.getHeight()/2,
@@ -111,7 +118,7 @@ public class SunBox2D extends ApplicationAdapter {
 			else if(b.type == TYPE_BOX) img = imgBrick;
 			else img = imgTriangle;
 			batch.draw(img, b.getX(), b.getY(), b.getWidth()/2, b.getHeight()/2, b.getWidth(), b.getHeight(), 1, 1, b.getAngle());
-		}
+		}*/
 		batch.end();
 	}
 	
