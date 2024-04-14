@@ -19,7 +19,7 @@ public class DynamicBody {
     private float x, y;
     private float r;
     private float width, height;
-    private Body body;
+    public Body body;
     public int type;
 
     DynamicBody(World world, float x, float y, float r){
@@ -31,6 +31,7 @@ public class DynamicBody {
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.linearDamping = 0.1f; // затухание скорости
         bodyDef.position.set(x, y);
 
         body = world.createBody(bodyDef);
@@ -58,6 +59,7 @@ public class DynamicBody {
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.linearDamping = 0.1f; // затухание скорости
         bodyDef.position.set(x, y);
 
         body = world.createBody(bodyDef);
@@ -85,6 +87,7 @@ public class DynamicBody {
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.linearDamping = 0.1f; // затухание скорости
         bodyDef.position.set(x, y);
 
         body = world.createBody(bodyDef);
@@ -112,6 +115,7 @@ public class DynamicBody {
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.linearDamping = 0.1f; // затухание скорости
         bodyDef.position.set(x, y);
 
         body = world.createBody(bodyDef);

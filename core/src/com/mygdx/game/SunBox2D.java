@@ -40,6 +40,7 @@ public class SunBox2D extends ApplicationAdapter {
 	// наши объекты и переменные
 	StaticBody floor;
 	StaticBody wallLeft, wallRight;
+	StaticBody roof;
 
 	KinematicBody platform;
 
@@ -51,7 +52,7 @@ public class SunBox2D extends ApplicationAdapter {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
 		touch = new Vector3();
-		world = new World(new Vector2(0, -9.8f), true);
+		world = new World(new Vector2(0f, 0f), true);
 		debugRenderer = new Box2DDebugRenderer();
 		debugRenderer.setDrawVelocities(true);
 
@@ -65,10 +66,16 @@ public class SunBox2D extends ApplicationAdapter {
 		floor = new StaticBody(world, 8, 0.5f, 16, 1);
 		wallLeft = new StaticBody(world, 0.5f, 5, 1, 8);
 		wallRight = new StaticBody(world, 15.5f, 5, 1, 8);
+		roof = new StaticBody(world, 8, 8.5f, 14, 1);
 
-		platform = new KinematicBody(world, 0, 3, 3, 1);
+		//platform = new KinematicBody(world, 0, 3, 3, 1);
 
-		for (int i = 0; i < 20; i++) {
+		balls.add(new DynamicBody(world, 3, 4.5f, 0.4f));
+		balls.add(new DynamicBody(world, 14, 5f, 0.4f));
+		balls.add(new DynamicBody(world, 14, 4f, 0.4f));
+		balls.add(new DynamicBody(world, 13, 4.5f, 0.4f));
+
+/*		for (int i = 0; i < 4; i++) {
 			if(i<2) {
 				balls.add(new DynamicBody(world, 8 + MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT + i, 0.4f));
 			} else if(i<4) {
@@ -84,7 +91,7 @@ public class SunBox2D extends ApplicationAdapter {
 				scalePolygon(polygon1, 0.5f);
 				balls.add(new DynamicBody(world, 8 + MathUtils.random(-0.01f, 0.01f), WORLD_HEIGHT + i, polygon0, polygon1));
 			}
-		}
+		}*/
 
 		// касания
 		createInputProcessor();
@@ -105,7 +112,7 @@ public class SunBox2D extends ApplicationAdapter {
 		}*/
 
 		// события
-		platform.move();
+		//platform.move();
 
 		// отрисовка
 		world.step(1/60f, 6, 2);
