@@ -7,13 +7,10 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class StaticBody {
-    private float x, y;
     private float width, height;
     private Body body;
 
     StaticBody(World world, float x, float y, float width, float height){
-        this.x = x;
-        this.y = y;
         this.width = width;
         this.height = height;
 

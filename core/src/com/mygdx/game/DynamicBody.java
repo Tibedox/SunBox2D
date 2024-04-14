@@ -1,8 +1,8 @@
 package com.mygdx.game;
 
-import static com.mygdx.game.SunBox2D.TYPE_BRICK;
+import static com.mygdx.game.SunBox2D.TYPE_BOX;
 import static com.mygdx.game.SunBox2D.TYPE_POLY;
-import static com.mygdx.game.SunBox2D.TYPE_SMILE;
+import static com.mygdx.game.SunBox2D.TYPE_CIRCLE;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
@@ -20,11 +20,10 @@ public class DynamicBody {
     private float r;
     private float width, height;
     private Body body;
-    private Fixture fixture;
     public int type;
 
     DynamicBody(World world, float x, float y, float r){
-        type = TYPE_SMILE;
+        type = TYPE_CIRCLE;
         this.x = x;
         this.y = y;
         this.r = r;
@@ -41,17 +40,17 @@ public class DynamicBody {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 0.2f; // плотность
+        fixtureDef.density = 0.4f; // плотность
         fixtureDef.friction = 0.4f; // трение
         fixtureDef.restitution = 0.8f; // упругость
 
-        fixture = body.createFixture(fixtureDef);
+        body.createFixture(fixtureDef);
 
         shape.dispose();
     }
 
     DynamicBody(World world, float x, float y, float width, float height){
-        type = TYPE_BRICK;
+        type = TYPE_BOX;
         this.x = x;
         this.y = y;
         this.width = width;
@@ -72,7 +71,7 @@ public class DynamicBody {
         fixtureDef.friction = 0.4f; // трение
         fixtureDef.restitution = 0.9f; // упругость
 
-        fixture = body.createFixture(fixtureDef);
+        body.createFixture(fixtureDef);
 
         shape.dispose();
     }
@@ -81,11 +80,8 @@ public class DynamicBody {
         type = TYPE_POLY;
         this.x = x;
         this.y = y;
-        this.width = 2;
-        this.height = 2;
-        for(int i=0; i<p.getVertices().length; i++){
-            p.getVertices()[i] /= 2.5f;
-        }
+        this.width = p.getBoundingRectangle().getWidth();
+        this.height = p.getBoundingRectangle().getHeight();
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -98,11 +94,11 @@ public class DynamicBody {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 0.2f; // плотность
+        fixtureDef.density = 0.5f; // плотность
         fixtureDef.friction = 0.4f; // трение
-        fixtureDef.restitution = 0.9f; // упругость
+        fixtureDef.restitution = 0.5f; // упругость
 
-        fixture = body.createFixture(fixtureDef);
+        body.createFixture(fixtureDef);
 
         shape.dispose();
     }
@@ -128,10 +124,10 @@ public class DynamicBody {
     }
 
     public boolean hit(float tx, float ty) {
-        return fixture.testPoint(tx, ty);
+        return body.getFixtureList().get(0).testPoint(tx, ty);
     }
 
     public void setImpulse(Vector2 p){
-        body.applyLinearImpulse(p, body.getPosition(), true);
+        body.applyLinearImpulse(p, body.getWorldCenter(), true);
     }
 }
