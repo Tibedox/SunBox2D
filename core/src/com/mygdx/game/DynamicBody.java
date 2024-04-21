@@ -19,10 +19,10 @@ public class DynamicBody {
     private float x, y;
     private float r;
     private float width, height;
-    public Body body;
+    private Body body;
     public int type;
 
-    DynamicBody(World world, float x, float y, float r){
+    DynamicBody(World world, float x, float y, float r, String name){
         type = TYPE_CIRCLE;
         this.x = x;
         this.y = y;
@@ -31,10 +31,12 @@ public class DynamicBody {
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.linearDamping = 0.1f; // затухание скорости
+        bodyDef.linearDamping = 0.2f; // затухание скорости
+        bodyDef.angularDamping = 0.2f;
         bodyDef.position.set(x, y);
 
         body = world.createBody(bodyDef);
+        body.setUserData(name);
 
         CircleShape shape = new CircleShape();
         shape.setRadius(r);
@@ -50,7 +52,7 @@ public class DynamicBody {
         shape.dispose();
     }
 
-    DynamicBody(World world, float x, float y, float width, float height){
+    DynamicBody(World world, float x, float y, float width, float height, String name){
         type = TYPE_BOX;
         this.x = x;
         this.y = y;
@@ -63,6 +65,7 @@ public class DynamicBody {
         bodyDef.position.set(x, y);
 
         body = world.createBody(bodyDef);
+        body.setUserData(name);
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(width/2, height/2);
@@ -159,6 +162,10 @@ public class DynamicBody {
 
     public float getAngle() {
         return body.getAngle() * MathUtils.radiansToDegrees;
+    }
+
+    public Body getBody() {
+        return body;
     }
 
     public boolean hit(float tx, float ty) {
