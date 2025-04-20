@@ -7,21 +7,24 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class DynamicObject {
+public class DynamicObjectBox {
     public float x, y;
-    public float radius;
+    public float width, height;
 
-    public DynamicObject(World world, float x, float y, float radius) {
+    public DynamicObjectBox(World world, float x, float y, float width, float height) {
         this.x = x;
         this.y = y;
-        this.radius = radius;
+        this.width = width;
+        this.height = height;
+
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
 
         Body body = world.createBody(bodyDef);
-        CircleShape shape = new CircleShape();
-        shape.setRadius(radius);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width/2, height/2);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;

@@ -26,10 +26,14 @@ public class Main extends ApplicationAdapter {
         StaticObject floor = new StaticObject(world, W_WIDTH/2, 1, W_WIDTH/2-0.1f, 0.3f);
         StaticObject wall1 = new StaticObject(world, 1, 5, 0.3f, 3.5f);
         StaticObject wall2 = new StaticObject(world, W_WIDTH-1, 5, 0.3f, 3.5f);
-        DynamicObject[] balls = new DynamicObject[50];
-        for(int i=0; i<balls.length; i++)
-            balls[i] = new DynamicObject(world, 8+MathUtils.random(-0.1f,0.1f), 4.5f+i, 0.4f);
-
+        DynamicObjectCircle[] balls = new DynamicObjectCircle[50];
+        for(int i=0; i<balls.length; i++) {
+            balls[i] = new DynamicObjectCircle(world, 8 + MathUtils.random(-0.1f, 0.1f), 4.5f + i, 0.4f);
+        }
+        DynamicObjectBox[] boxes = new DynamicObjectBox[50];
+        for(int i=0; i<boxes.length; i++) {
+            boxes[i] = new DynamicObjectBox(world, 6 + MathUtils.random(-0.3f, 0.3f), 4.5f + i, 1, 0.5f);
+        }
     }
 
     @Override
@@ -38,7 +42,6 @@ public class Main extends ApplicationAdapter {
         debugRenderer.render(world, camera.combined);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-
         batch.end();
         world.step(1/60f, 6, 2);
     }
