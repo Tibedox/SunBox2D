@@ -16,6 +16,7 @@ public class Main extends ApplicationAdapter {
     private World world;
     private Box2DDebugRenderer debugRenderer;
     private OrthographicCamera camera;
+    private KinematicObject platform;
 
     @Override
     public void create() {
@@ -45,10 +46,15 @@ public class Main extends ApplicationAdapter {
         for (int i = 0; i < crosses.length; i++) {
             crosses[i] = new DynamicObjectCross(world, 4 + MathUtils.random(-0.3f, 0.3f), 4.5f + i, 0.8f, 0.2f);
         }
+        platform = new KinematicObject(world, -3, 4, 5, 1);
     }
 
     @Override
     public void render() {
+        // события
+        platform.move();
+
+        // отрисовка
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
         debugRenderer.render(world, camera.combined);
         batch.setProjectionMatrix(camera.combined);
