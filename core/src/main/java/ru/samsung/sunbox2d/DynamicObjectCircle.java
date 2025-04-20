@@ -1,6 +1,7 @@
 package ru.samsung.sunbox2d;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -11,6 +12,7 @@ public class DynamicObjectCircle {
     public float x, y;
     public float radius;
     public TextureRegion img;
+    public Body body;
 
     public DynamicObjectCircle(World world, float x, float y, float radius, TextureRegion img) {
         this.x = x;
@@ -22,7 +24,7 @@ public class DynamicObjectCircle {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
 
-        Body body = world.createBody(bodyDef);
+        body = world.createBody(bodyDef);
 
         CircleShape shape = new CircleShape();
         shape.setRadius(radius);
@@ -35,5 +37,21 @@ public class DynamicObjectCircle {
 
         body.createFixture(fixtureDef);
         shape.dispose();
+    }
+
+    public float getX(){
+        return body.getPosition().x-radius;
+    }
+    public float getY(){
+        return body.getPosition().y-radius;
+    }
+    public float getWidth(){
+        return radius*2;
+    }
+    public float getHeight(){
+        return radius*2;
+    }
+    public float getAngle(){
+        return body.getAngle()* MathUtils.radiansToDegrees;
     }
 }

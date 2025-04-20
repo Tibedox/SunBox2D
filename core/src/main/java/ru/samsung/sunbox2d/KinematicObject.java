@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class KinematicObject {
     public float x, y;
     public float width, height;
-    private float vx = 2;
+    private float vx = 0;
     private float va = 4;
     Body body;
 
