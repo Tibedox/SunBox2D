@@ -33,7 +33,7 @@ public class Main extends ApplicationAdapter {
         circleRed = new Texture("red_circle.png");
         circleGreen = new Texture("green_circle.png");
         TextureRegion cRed = new TextureRegion(circleRed, 256, 256);
-        TextureRegion
+        TextureRegion cGreen = new TextureRegion(circleGreen, 256, 256);
 
         StaticObject floor = new StaticObject(world, W_WIDTH/2, 1, W_WIDTH/2-0.1f, 0.3f);
         StaticObject wall1 = new StaticObject(world, 1, 5, 0.3f, 3.5f);
