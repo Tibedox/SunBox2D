@@ -2,7 +2,9 @@ package ru.samsung.sunbox2d;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2D;
@@ -17,22 +19,28 @@ public class Main extends ApplicationAdapter {
     private Box2DDebugRenderer debugRenderer;
     private OrthographicCamera camera;
     private KinematicObject platform;
+    Texture circleRed, circleGreen;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
-        Box2D.init();
-        world = new World(new Vector2(0, -10), true);
         camera = new OrthographicCamera();
         camera.setToOrtho(false, W_WIDTH, W_HEIGHT);
-
+        Box2D.init();
+        world = new World(new Vector2(0, -10), true);
         debugRenderer = new Box2DDebugRenderer();
+
+        circleRed = new Texture("red_circle.png");
+        circleGreen = new Texture("green_circle.png");
+        TextureRegion cRed = new TextureRegion(circleRed, 256, 256);
+        TextureRegion
+
         StaticObject floor = new StaticObject(world, W_WIDTH/2, 1, W_WIDTH/2-0.1f, 0.3f);
         StaticObject wall1 = new StaticObject(world, 1, 5, 0.3f, 3.5f);
         StaticObject wall2 = new StaticObject(world, W_WIDTH-1, 5, 0.3f, 3.5f);
         DynamicObjectCircle[] balls = new DynamicObjectCircle[50];
         for(int i=0; i<balls.length; i++) {
-            balls[i] = new DynamicObjectCircle(world, 8 + MathUtils.random(-0.1f, 0.1f), 4.5f + i, 0.4f);
+            balls[i] = new DynamicObjectCircle(world, 8 + MathUtils.random(-0.1f, 0.1f), 4.5f + i, 0.4f, );
         }
         DynamicObjectBox[] boxes = new DynamicObjectBox[50];
         for(int i=0; i<boxes.length; i++) {

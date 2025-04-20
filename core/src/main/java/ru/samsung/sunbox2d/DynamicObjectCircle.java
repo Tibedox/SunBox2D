@@ -1,5 +1,6 @@
 package ru.samsung.sunbox2d;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -9,11 +10,13 @@ import com.badlogic.gdx.physics.box2d.World;
 public class DynamicObjectCircle {
     public float x, y;
     public float radius;
+    public TextureRegion img;
 
-    public DynamicObjectCircle(World world, float x, float y, float radius) {
+    public DynamicObjectCircle(World world, float x, float y, float radius, TextureRegion img) {
         this.x = x;
         this.y = y;
         this.radius = radius;
+        this.img = img;
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
