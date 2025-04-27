@@ -120,6 +120,21 @@ public class Main extends ApplicationAdapter {
                     bodyTouched = balls[i].body;
                 }
             }
+            for(DynamicObjectTriangle t: triangles){
+                if(t.hit(touchStartPos)){
+                    bodyTouched = t.body;
+                }
+            }
+            for(DynamicObjectBox t: boxes){
+                if(t.hit(touchStartPos)){
+                    bodyTouched = t.body;
+                }
+            }
+            for(DynamicObjectCross t: crosses){
+                if(t.hit(touchStartPos)){
+                    bodyTouched = t.body;
+                }
+            }
             return false;
         }
 

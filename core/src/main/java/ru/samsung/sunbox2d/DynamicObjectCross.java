@@ -1,14 +1,18 @@
 package ru.samsung.sunbox2d;
 
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
 public class DynamicObjectCross {
     public float x, y;
     public float width, height;
+    public Body body;
 
     public DynamicObjectCross(World world, float x, float y, float width, float height) {
         this.x = x;
@@ -20,7 +24,7 @@ public class DynamicObjectCross {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
 
-        Body body = world.createBody(bodyDef);
+        body = world.createBody(bodyDef);
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(width/2, height/2);
@@ -45,5 +49,13 @@ public class DynamicObjectCross {
 
         body.createFixture(fixtureDef1);
         shape1.dispose();
+    }
+
+    public boolean hit(Vector3 t){
+        Array<Fixture> fixtures = body.getFixtureList();
+        for(Fixture f: fixtures) {
+            return f.testPoint(t.x, t.y);
+        }
+        return false;
     }
 }
