@@ -24,10 +24,10 @@ public class Main extends ApplicationAdapter {
     private Box2DDebugRenderer debugRenderer;
     private OrthographicCamera camera;
     private KinematicObject platform;
-    DynamicObjectCircle[] balls = new DynamicObjectCircle[5];
-    DynamicObjectBox[] boxes = new DynamicObjectBox[5];
-    DynamicObjectTriangle[] triangles = new DynamicObjectTriangle[5];
-    DynamicObjectCross[] crosses = new DynamicObjectCross[5];
+    DynamicObjectCircle[] balls = new DynamicObjectCircle[1];
+    DynamicObjectBox[] boxes = new DynamicObjectBox[4];
+    DynamicObjectTriangle[] triangles = new DynamicObjectTriangle[0];
+    DynamicObjectCross[] crosses = new DynamicObjectCross[0];
     Texture circleRed, circleGreen;
 
     @Override
@@ -51,11 +51,16 @@ public class Main extends ApplicationAdapter {
         StaticObject wall2 = new StaticObject(world, W_WIDTH-1, 5, 0.3f, 3.5f);
 
         for(int i=0; i<balls.length; i++) {
-            balls[i] = new DynamicObjectCircle(world, 8 + MathUtils.random(-0.1f, 0.1f), 4.5f + i, 0.4f, MathUtils.randomBoolean() ? cRed : cGreen);
+            balls[i] = new DynamicObjectCircle(world, 2+i, 2, 0.4f, MathUtils.randomBoolean() ? cRed : cGreen);
         }
-        for(int i=0; i<boxes.length; i++) {
-            boxes[i] = new DynamicObjectBox(world, 6 + MathUtils.random(-0.3f, 0.3f), 4.5f + i, 1, 0.5f);
-        }
+        /*for(int i=0; i<boxes.length; i++) {
+            boxes[i] = new DynamicObjectBox(world, 13, 4.5f + i, 0.5f, 1);
+        }*/
+        boxes[0] = new DynamicObjectBox(world, 13, 4.5f, 0.3f, 1);
+        boxes[1] = new DynamicObjectBox(world, 13.8f, 4.5f, 0.3f, 1);
+        boxes[2] = new DynamicObjectBox(world, 13.4f, 5.5f, 1f, 0.3f);
+        boxes[3] = new DynamicObjectBox(world, 13.4f, 6f, 0.3f, 1);
+
         for (int i = 0; i < triangles.length; i++) {
             triangles[i] = new DynamicObjectTriangle(world, 10+MathUtils.random(-0.1f, 0.1f), 4.5f+i, 0.7f, 0.7f);
         }
@@ -144,7 +149,7 @@ public class Main extends ApplicationAdapter {
             camera.unproject(touchFinishPos);
             if(bodyTouched != null) {
                 Vector3 swipe = new Vector3(touchFinishPos).sub(touchStartPos);
-                bodyTouched.applyLinearImpulse(new Vector2(swipe.x, swipe.y), bodyTouched.getPosition(), true);
+                bodyTouched.applyLinearImpulse(new Vector2(-swipe.x, -swipe.y), bodyTouched.getPosition(), true);
                 bodyTouched = null;
             }
             return false;
