@@ -23,7 +23,10 @@ public class Main extends ApplicationAdapter {
     private Box2DDebugRenderer debugRenderer;
     private OrthographicCamera camera;
     private KinematicObject platform;
-    DynamicObjectCircle[] balls = new DynamicObjectCircle[50];
+    DynamicObjectCircle[] balls = new DynamicObjectCircle[5];
+    DynamicObjectBox[] boxes = new DynamicObjectBox[5];
+    DynamicObjectTriangle[] triangles = new DynamicObjectTriangle[5];
+    DynamicObjectCross[] crosses = new DynamicObjectCross[5];
     Texture circleRed, circleGreen;
 
     @Override
@@ -35,6 +38,7 @@ public class Main extends ApplicationAdapter {
         Box2D.init();
         world = new World(new Vector2(0, -10), true);
         debugRenderer = new Box2DDebugRenderer();
+        Gdx.input.setInputProcessor(new MyInputProcessor());
 
         circleRed = new Texture("red_circle.png");
         circleGreen = new Texture("green_circle.png");
@@ -48,15 +52,12 @@ public class Main extends ApplicationAdapter {
         for(int i=0; i<balls.length; i++) {
             balls[i] = new DynamicObjectCircle(world, 8 + MathUtils.random(-0.1f, 0.1f), 4.5f + i, 0.4f, MathUtils.randomBoolean() ? cRed : cGreen);
         }
-        DynamicObjectBox[] boxes = new DynamicObjectBox[50];
         for(int i=0; i<boxes.length; i++) {
             boxes[i] = new DynamicObjectBox(world, 6 + MathUtils.random(-0.3f, 0.3f), 4.5f + i, 1, 0.5f);
         }
-        DynamicObjectTriangle[] triangles = new DynamicObjectTriangle[50];
         for (int i = 0; i < triangles.length; i++) {
             triangles[i] = new DynamicObjectTriangle(world, 10+MathUtils.random(-0.1f, 0.1f), 4.5f+i, 0.7f, 0.7f);
         }
-        DynamicObjectCross[] crosses = new DynamicObjectCross[50];
         for (int i = 0; i < crosses.length; i++) {
             crosses[i] = new DynamicObjectCross(world, 4 + MathUtils.random(-0.3f, 0.3f), 4.5f + i, 0.8f, 0.2f);
         }
@@ -66,20 +67,6 @@ public class Main extends ApplicationAdapter {
     @Override
     public void render() {
         // касания
-        if(Gdx.input.isTouched()){
-            touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            camera.unproject(touch);
-            for(int i=0; i<balls.length; i++) {
-                Vector2 bodyPos = balls[i].body.getPosition();
-                float distance = touch.dst(bodyPos.x, bodyPos.y, 0);
-                if(distance<balls[i].radius){
-                    Vector2 impulseDirection = new Vector2(bodyPos.x-touch.x, bodyPos.y-touch.y);
-                    impulseDirection.nor();
-                    float impulseStrength = 5.0f;
-                    balls[i].body.applyLinearImpulse(impulseDirection.scl(impulseStrength), bodyPos, true);
-                }
-            }
-        }
 
         // события
         platform.move();
@@ -89,11 +76,11 @@ public class Main extends ApplicationAdapter {
         debugRenderer.render(world, camera.combined);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        for(int i=0; i<balls.length; i++) {
+        /*for(int i=0; i<balls.length; i++) {
             batch.draw(balls[i].img, balls[i].getX(), balls[i].getY(),
                 balls[i].getWidth()/2, balls[i].getHeight()/2,
                 balls[i].getWidth(), balls[i].getHeight(), 1, 1, balls[i].getAngle());
-        }
+        }*/
         batch.end();
         world.step(1/60f, 6, 2);
     }
@@ -104,6 +91,8 @@ public class Main extends ApplicationAdapter {
     }
 
     class MyInputProcessor implements InputProcessor{
+        Vector3 touchStartPos = new Vector3();
+        Vector3 touchFinishPos = new Vector3();
 
         @Override
         public boolean keyDown(int keycode) {
@@ -122,13 +111,17 @@ public class Main extends ApplicationAdapter {
 
         @Override
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
+            touchStartPos.set(screenX, screenY, 0);
+            camera.unproject(touchStartPos);
             return false;
         }
 
         @Override
         public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-
+            touchFinishPos.set(screenX, screenY, 0);
+            camera.unproject(touchFinishPos);
+            Vector3 swipe = new Vector3(touchFinishPos).sub(touchStartPos);
+            balls[0].body.applyLinearImpulse(new Vector2(swipe.x, swipe.y), balls[0].body.getPosition(), true);
             return false;
         }
 
