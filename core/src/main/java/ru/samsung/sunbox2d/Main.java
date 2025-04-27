@@ -77,11 +77,11 @@ public class Main extends ApplicationAdapter {
         debugRenderer.render(world, camera.combined);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        /*for(int i=0; i<balls.length; i++) {
+        for(int i=0; i<balls.length; i++) {
             batch.draw(balls[i].img, balls[i].getX(), balls[i].getY(),
                 balls[i].getWidth()/2, balls[i].getHeight()/2,
                 balls[i].getWidth(), balls[i].getHeight(), 1, 1, balls[i].getAngle());
-        }*/
+        }
         batch.end();
         world.step(1/60f, 6, 2);
     }

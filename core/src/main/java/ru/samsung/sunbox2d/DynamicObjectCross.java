@@ -54,7 +54,9 @@ public class DynamicObjectCross {
     public boolean hit(Vector3 t){
         Array<Fixture> fixtures = body.getFixtureList();
         for(Fixture f: fixtures) {
-            return f.testPoint(t.x, t.y);
+            if(f.testPoint(t.x, t.y)) {
+                return true;
+            }
         }
         return false;
     }
