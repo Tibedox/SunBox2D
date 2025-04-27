@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -93,6 +94,7 @@ public class Main extends ApplicationAdapter {
     class MyInputProcessor implements InputProcessor{
         Vector3 touchStartPos = new Vector3();
         Vector3 touchFinishPos = new Vector3();
+        private Body bodyTouched;
 
         @Override
         public boolean keyDown(int keycode) {
@@ -113,6 +115,11 @@ public class Main extends ApplicationAdapter {
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
             touchStartPos.set(screenX, screenY, 0);
             camera.unproject(touchStartPos);
+            for (int i = 0; i < balls.length; i++) {
+                if(balls[i].hit(touchStartPos)) {
+                    bodyTouched = balls[i].body;
+                }
+            }
             return false;
         }
 
@@ -120,8 +127,11 @@ public class Main extends ApplicationAdapter {
         public boolean touchUp(int screenX, int screenY, int pointer, int button) {
             touchFinishPos.set(screenX, screenY, 0);
             camera.unproject(touchFinishPos);
-            Vector3 swipe = new Vector3(touchFinishPos).sub(touchStartPos);
-            balls[0].body.applyLinearImpulse(new Vector2(swipe.x, swipe.y), balls[0].body.getPosition(), true);
+            if(bodyTouched != null) {
+                Vector3 swipe = new Vector3(touchFinishPos).sub(touchStartPos);
+                bodyTouched.applyLinearImpulse(new Vector2(swipe.x, swipe.y), bodyTouched.getPosition(), true);
+                bodyTouched = null;
+            }
             return false;
         }
 

@@ -2,17 +2,23 @@ package ru.samsung.sunbox2d;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+
+import java.lang.reflect.Array;
 
 public class DynamicObjectCircle {
     public float x, y;
     public float radius;
     public TextureRegion img;
     public Body body;
+    private Fixture fixture;
 
     public DynamicObjectCircle(World world, float x, float y, float radius, TextureRegion img) {
         this.x = x;
@@ -35,8 +41,12 @@ public class DynamicObjectCircle {
         fixtureDef.friction = 0.4f;
         fixtureDef.restitution = 0.6f;
 
-        body.createFixture(fixtureDef);
+        fixture = body.createFixture(fixtureDef);
         shape.dispose();
+    }
+
+    public boolean hit(Vector3 t){
+        return fixture.testPoint(t.x, t.y);
     }
 
     public float getX(){
